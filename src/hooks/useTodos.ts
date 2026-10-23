@@ -6,7 +6,8 @@ const STORAGE_KEY = 'todos'
 function loadTodos(): Todo[] {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    return stored ? (JSON.parse(stored) as Todo[]) : []
+    const parsed: unknown = stored ? JSON.parse(stored) : []
+    return Array.isArray(parsed) ? (parsed as Todo[]) : []
   } catch {
     return []
   }
@@ -35,10 +36,7 @@ export function useTodos() {
 
   function editTodo(id: string, text: string) {
     const trimmed = text.trim()
-    if (!trimmed) {
-      deleteTodo(id)
-      return
-    }
+    if (!trimmed) return
     setTodos((prev) =>
       prev.map((todo) => (todo.id === id ? { ...todo, text: trimmed } : todo)),
     )
