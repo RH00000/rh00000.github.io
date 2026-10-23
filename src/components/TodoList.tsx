@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { Todo } from '../types'
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
 function TodoList({ todos, onToggle, onDelete, onEdit }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [draft, setDraft] = useState('')
+  const cancelEdit = useRef(false)
 
   if (todos.length === 0) return <p className="empty">Nothing to do</p>
 
@@ -26,19 +27,24 @@ function TodoList({ todos, onToggle, onDelete, onEdit }: Props) {
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  onEdit(todo.id, draft)
-                  setEditingId(null)
+                  e.currentTarget.blur()
                 } else if (e.key === 'Escape') {
-                  setEditingId(null)
+                  cancelEdit.current = true
+                  e.currentTarget.blur()
                 }
               }}
-              onBlur={() => setEditingId(null)}
+              onBlur={() => {
+                if (!cancelEdit.current) onEdit(todo.id, draft)
+                cancelEdit.current = false
+                setEditingId(null)
+              }}
             />
           ) : (
-            <label className={todo.done ? 'done' : undefined}>
+            <div className={todo.done ? 'done' : undefined}>
               <input
                 type="checkbox"
                 checked={todo.done}
+                aria-label={`Toggle ${todo.text}`}
                 onChange={() => onToggle(todo.id)}
               />
               <span
@@ -49,7 +55,7 @@ function TodoList({ todos, onToggle, onDelete, onEdit }: Props) {
               >
                 {todo.text}
               </span>
-            </label>
+            </div>
           )}
           <button type="button" onClick={() => onDelete(todo.id)}>
             Delete
