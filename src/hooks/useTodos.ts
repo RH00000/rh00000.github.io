@@ -1,0 +1,37 @@
+import { useEffect, useState } from 'react'
+import type { Todo } from '../types'
+
+const STORAGE_KEY = 'todos'
+
+function loadTodos(): Todo[] {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    return stored ? (JSON.parse(stored) as Todo[]) : []
+  } catch {
+    return []
+  }
+}
+
+export function useTodos() {
+  const [todos, setTodos] = useState<Todo[]>(loadTodos)
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+  }, [todos])
+
+  function addTodo(text: string) {
+    setTodos((prev) => [...prev, { id: crypto.randomUUID(), text, done: false }])
+  }
+
+  function toggleTodo(id: string) {
+    setTodos((prev) =>
+      prev.map((todo) => (todo.id === id ? { ...todo, done: !todo.done } : todo)),
+    )
+  }
+
+  function deleteTodo(id: string) {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id))
+  }
+
+  return { todos, addTodo, toggleTodo, deleteTodo }
+}
