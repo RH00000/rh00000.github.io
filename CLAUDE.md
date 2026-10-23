@@ -22,6 +22,6 @@ Vite + React 19 + TypeScript. Right now this is a practice ground for a small to
 ## Parallel work rules (other agents may be working in this repo at the same time)
 - Stay inside the files your task needs. If you have to edit a shared file (`App.tsx`, `types.ts`, `package.json`, `index.css`), keep the edit small and call it out in your summary.
 - Don't install new dependencies without asking first.
-- Commit small and often, with clear messages (`feat: ...`, `fix: ...`).
+- Don't commit unless I ask. When I ask, use clear messages (`feat: ...`, `fix: ...`).
 - Never push. Never switch branches or touch `main`. The human merges.
 - End every task with: files changed, what you didn't do or check, and any risk.
