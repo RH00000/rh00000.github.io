@@ -4,13 +4,19 @@ import TodoList from './components/TodoList'
 import { useTodos } from './hooks/useTodos'
 
 function App() {
-  const { todos, addTodo, toggleTodo, deleteTodo, clearCompleted } = useTodos()
+  const { todos, addTodo, toggleTodo, deleteTodo, editTodo, clearCompleted } =
+    useTodos()
 
   return (
     <main>
       <h1>Todos</h1>
       <TodoInput onAdd={addTodo} />
-      <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
+      <TodoList
+        todos={todos}
+        onToggle={toggleTodo}
+        onDelete={deleteTodo}
+        onEdit={editTodo}
+      />
       <TodoFooter todos={todos} onClearCompleted={clearCompleted} />
     </main>
   )
