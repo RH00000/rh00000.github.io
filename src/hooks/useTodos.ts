@@ -33,5 +33,9 @@ export function useTodos() {
     setTodos((prev) => prev.filter((todo) => todo.id !== id))
   }
 
-  return { todos, addTodo, toggleTodo, deleteTodo }
+  function clearCompleted() {
+    setTodos((prev) => prev.filter((todo) => !todo.done))
+  }
+
+  return { todos, addTodo, toggleTodo, deleteTodo, clearCompleted }
 }
