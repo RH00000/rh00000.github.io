@@ -7,7 +7,15 @@ function loadTodos(): Todo[] {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
     const parsed: unknown = stored ? JSON.parse(stored) : []
-    return Array.isArray(parsed) ? (parsed as Todo[]) : []
+    return Array.isArray(parsed)
+      ? parsed.filter(
+          (t) =>
+            t &&
+            typeof t.id === 'string' &&
+            typeof t.text === 'string' &&
+            typeof t.done === 'boolean',
+        )
+      : []
   } catch {
     return []
   }
@@ -17,7 +25,11 @@ export function useTodos() {
   const [todos, setTodos] = useState<Todo[]>(loadTodos)
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+    } catch {
+      // storage unavailable, keep in-memory
+    }
   }, [todos])
 
   function addTodo(text: string) {
